@@ -1,0 +1,12 @@
+# いらない
+
+*.log
+*.csv
+
+uploads/*
+vendor/*
+
+composer.lock
+composer.phar
+
+# 絶対に非管理

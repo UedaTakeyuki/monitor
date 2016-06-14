@@ -1,0 +1,501 @@
+<?php
+  date_default_timezone_set("Asia/Tokyo");
+  session_start();
+
+  require_once("common.php");
+  require_once("vendor/autoload.php"); 
+  #require_once("Log.php");
+  $logfile = &Log::factory('file', 'index.out.log', 'Tls EST'); 
+  $logfile->log('['.__LINE__.']'.'*** STARTED ***');
+
+  // エラー出力しない場合
+  //ini_set( 'display_errors', 0 );
+  // エラー出力する場合
+  //ini_set( 'display_errors', 1 );
+
+  # 設定の読み込み
+  $configfile = "uploads/".$_GET['serial_id']."/config.ini";
+  $ini = parse_ini_file($configfile);
+
+  // ログイン状態のチェック
+#  if (!isset($_SESSION["USERID"]) || !isset($_SESSION["serial_id"]) || $_SESSION["serial_id"] != $_GET['serial_id']) {
+  if (!isset($_SESSION["LOGINS"]) || !array_key_exists($_GET['serial_id'], $_SESSION["LOGINS"])) {
+    // ログイン成功後の戻り先(パラメタ付き)をセッション変数に保存
+    $_SESSION["return_url"]=$_SERVER["REQUEST_URI"];
+    $logfile->log('['.__LINE__.']'.'$_SESSION["return_url"] = '.$_SESSION["return_url"]);
+    // ログイン処理
+    header("Location: login.php?serial_id=".$_GET['serial_id']);
+    exit;
+  }
+
+  // データの設定ファイル一覧を取得
+  $data_inis = glob("uploads/".$_GET['serial_id']."/*.dini");
+  /*
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+    print "name = ".$dini["name"];
+    print "unit = ".$dini["unit"];
+  }
+  exit;
+  */
+
+?>
+
+<!DOCTYPE html>
+<html lang="ja" id="demo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title><?php echo TITLE?></title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
+  <!-- <script src="mqttws31.js" type="text/javascript"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.5/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+  <!--<script src="m2x-2.0.3.js"></script>-->
+<!--  <script src="jquery-1.10.2.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <!-- <script src="custom-scripting.js"></script> -->
+  <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+  <!-- VUE start -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.10/vue.js'></script>
+  <!-- VUE end -->
+
+  <!-- BOOTSTRAP start -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <!-- BOOTSTRAP end -->
+
+
+  <script>
+  //--------------------------
+  // chart
+  //--------------------------
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+    var myChart_<?php echo $dini["dname"]?>;
+<?php
+  }
+?>
+
+  var chart_type = "time";
+  var forced = "no";
+  var timeFormat = 'MM/DD HH:mm:ss';
+
+  Chart.defaults.global.legend.display = false;
+
+
+  var gLastTime; // 最後に受け取ったデータの時間。ここで明に受け取るファイル以外のファイルの時刻チェッック用
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+    var gLastTime_<?php echo $dini["dname"]?>;
+<?php
+  }
+?>
+
+  var gIni = { // config.ini の設定値
+    'show_data_lows': <?php echo $ini["show_data_lows"]; ?>
+  };
+
+  window.onload = function (){
+
+    //--------------------------
+    // VUE
+    //--------------------------
+              var demo = new Vue({
+                      el: '#demo',
+                      data: {
+                        message: '温度計測値'
+                      }
+                    });
+
+  // コンテキストの取得
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+    var ctx_<?php echo $dini["dname"]?> = document.getElementById("myChart_<?php echo $dini["dname"]?>").getContext("2d");;
+<?php
+  }
+?>
+
+  // イニシャルデータ
+  var data = {
+    labels: [],
+    datasets: [
+    ]
+  };
+
+
+  function toMyTime(dt){
+    mydate = new Date(Date.parse(dt));
+    return mydate.toLocaleTimeString();
+  };
+  function toMyDateTime(dt){
+    mydate = new Date(Date.parse(dt));
+    return mydate.toLocaleString();
+  };
+  
+  // toLocalString が実装依存なので使わない
+  function toMyTime2(dt){
+    mydate = new Date(dt);
+    str = mydate.getHours() + ":" +
+    //      mydate.getMinutes(); // + ":" + mydate.getSeconds()
+          mydate.getMinutes() + ":" +
+          mydate.getSeconds();
+    return str;
+  };
+  function toMyDateTime2(dt){
+    mydate = new Date(dt);
+/*    str = mydate.getFullYear() + "年" +
+          (mydate.getMonth() + 1) + "月" +
+          mydate.getDate() + "日 " +
+          toMyTime2(dt);*/
+    str = (mydate.getMonth() + 1) + "/" +
+          mydate.getDate() + " " +
+          toMyTime2(dt);
+    return str;
+  };
+
+  function setMyGraph(j_data, chart, tag, unit_str){
+    chart.config.data.labels.splice(0, chart.config.data.labels.length);
+    if (chart.config.data.datasets[0].data.length != 0){
+      chart.config.data.datasets[0].data.splice(0, chart.config.data.datasets[0].data.length);
+    }
+    for (i=0; i < j_data.length; i++){
+      chart.config.data.labels.push(toMyDateTime2(j_data[i].datetime));
+      chart.config.data.datasets[0].data.push(j_data[i].data.toFixed(1));
+    }
+    // グラフ領域のタグの描画
+    tag_val_string = toMyDateTime2(j_data[0].datetime) + ", " + j_data[0].data.toFixed(1) +unit_str;
+    document.getElementById(tag).innerHTML = tag_val_string;
+
+    chart.update();
+  };
+
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+  function onReceiveStreamValues_<?php echo $dini["dname"]?>(j_data) {
+    // 最後のデータの時間を保存
+    gLastTime = j_data[0].datetime;
+    gLastTime_temp = gLastTime; 
+
+    // グラフの更新
+    setMyGraph(j_data, myLineChart_<?php echo $dini["dname"]?>,"<?php echo $dini["dname"]?>_tag", " <?php echo $dini["unit"]?>");
+    myLineChart_<?php echo $dini["dname"]?>.update();
+  };
+<?php
+  }
+?>
+
+  // time chart の時間軸のフォーマット。momentjs の display format を指定
+  var time = {
+    // string/callback - By default, date objects are expected. You may use a pattern string from http://momentjs.com/docs/#/parsing/string-format/ to parse a time string format, or use a callback function that is passed the label, and must return a moment() instance.
+    parser: false,
+    // string - By default, unit will automatically be detected.  Override with 'week', 'month', 'year', etc. (see supported time measurements)
+    unit: false,
+
+    // Number - The number of steps of the above unit between ticks
+    unitStepSize: 1,
+
+    // string - By default, no rounding is applied.  To round, set to a supported time unit eg. 'week', 'month', 'year', etc.
+    round: false,
+
+    // Moment js for each of the units. Replaces `displayFormat`
+    // To override, use a pattern string from http://momentjs.com/docs/#/displaying/format/
+    displayFormats: {
+      'millisecond': 'SSS [ms]',
+      'second': 'h:mm:ss a', // 11:20:01 AM
+      'minute': 'h:mm:ss a', // 11:20:01 AM
+      'hour': 'MM, D hA', // Sept 4, 5PM
+//              'hour': 'MMM D, hA', // Sept 4, 5PM
+      'day': 'll', // Sep 4 2015
+      'week': 'll', // Week 46, or maybe "[W]WW - YYYY" ?
+      'month': 'MM YYYY', // Sept 2015
+//              'month': 'MMM YYYY', // Sept 2015
+      'quarter': '[Q]Q - YYYY', // Q3
+      'year': 'YYYY', // 2015
+    },
+    // Sets the display format used in tooltip generation
+    tooltipFormat: '',
+  };
+
+  var options = {
+//    responsive: true,
+    scales: {
+      xAxes: [{
+        type: "time",
+        time: time,
+        ticks:{
+          autoSkip: true,
+        },
+        scaleLabel: {
+          display: false,
+          labelString: '日時'
+        }
+      }, ],
+      yAxes: [{
+        scaleLabel: {
+          display: false,
+          labelString: '℃'
+        },
+        ticks:{
+//          stepSize: 0.5,
+        },
+      }]
+    },
+  }
+
+  function new_config(){
+    config = {type: 'line', 
+              data: $.extend(true, {}, data), 
+              options: options};
+    config.data.datasets.push($.extend(true, {}, {data: [],fill: false}));
+    config.data.datasets[0].label = "ラベル";
+    return config;
+  }
+
+  function setColor_onGraph(o){
+    o.borderColor = "rgba(151,187,205,0.4)"
+    o.backgroundColor = "rgba(151,187,205,0.5)"
+    o.pointBorderColor = "rgba(151,187,205,0.7)"
+    o.pointBackgroundColor = "rgba(151,187,205,0.5)"
+    o.pointBorderWidth = 1;
+    o.fill = true;
+
+  //  o.lineTension = 0;
+  }
+
+  //　描画
+  //   data をそのまま渡すと全グラフの data ツリーが同じになり、x, y ラベルが同じになってしまうので
+  //   data オブジェクトのコピー (JQuerry の extend) を渡す
+  Chart.defaults.global.animation = false;
+
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+  config = new_config();
+  setColor_onGraph(config.data.datasets[0]);
+  myLineChart_<?php echo $dini["dname"]?> = new Chart(ctx_<?php echo $dini["dname"]?>, config);
+  myLineChart_<?php echo $dini["dname"]?>.datasets = config.data.datasets;
+<?php
+  }
+?>
+  // オプション設定
+  //myLineChart.defaults.global.showScale = false;
+  // データ追加
+  //myLineChart.addData([0], "");
+  // 先頭データ削除
+  //myLineChart.removeData();
+
+    var iv = setInterval( function() {
+
+      $.ajax({
+      type: "GET",
+//      url: "data.php",
+      url: "data.php",
+      //data: {serial_id: "00000000c4c423ee"},
+      data: {serial_id: "<?php echo $_GET['serial_id']; ?>",
+             show_data_lows: <?php echo $ini['show_data_lows']; ?>,
+             show_data_gnt: "<?php echo $ini['show_data_gnt']; ?>",
+             LastTime: gLastTime,
+             ILTimes: {
+              // 以下、キーはファイル名（拡張子なし）
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+    <?php echo $dini["fname"]?>: gLastTime_<?php echo $dini["dname"] ?>,
+<?php
+  }
+?>
+             }
+            },
+      dataType: "json",
+      /**
+       * Ajax通信が成功した場合に呼び出されるメソッド
+       */
+      success: function(data, dataType) 
+      {
+        //console.log('temp = ' + data.temp);
+        //console.log('humidity = ' + data.humidity);
+        //document.getElementById("pic_file_name").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
+        //$('#latest_pic').attr('src', '/tools/150721/uploads/'+"<?php echo $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
+        if(data){
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+          if(data.<?php echo $dini["fname"]?>)
+            onReceiveStreamValues_<?php echo $dini["dname"]?>(data.<?php echo $dini["fname"]?>);
+<?php
+  }
+?>
+        }
+      },
+      /**
+       * Ajax通信が失敗場合に呼び出されるメソッド
+       */
+      error: function(XMLHttpRequest, textStatus, errorThrown) 
+      {
+        //通常はここでtextStatusやerrorThrownの値を見て処理を切り分けるか、単純に通信に失敗した際の処理を記述します。
+
+        //this;
+        //thisは他のコールバック関数同様にAJAX通信時のオプションを示します。
+
+        //エラーメッセージの表示
+        console.log('Error : ' + errorThrown);
+      }
+    });
+
+      $.ajax({
+      type: "GET",
+      url: "pic.php",
+      //data: {serial_id: "00000000c4c423ee"},
+      data: {serial_id: "<?php echo $_GET['serial_id']; ?>"},
+      dataType: "json",
+      /**
+       * Ajax通信が成功した場合に呼び出されるメソッド
+       */
+      success: function(data, dataType) 
+      {
+        //console.log("data.latest_pic_name = "+data.latest_pic_name);
+        document.getElementById("pic_file_name").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
+//        $('#latest_pic').attr('src', '/tools/151024/uploads/'+"<?php echo $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
+        $('#latest_pic').attr('src', 'uploads/'+"<?php echo $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
+      },
+      /**
+       * Ajax通信が失敗場合に呼び出されるメソッド
+       */
+      error: function(XMLHttpRequest, textStatus, errorThrown) 
+      {
+        //通常はここでtextStatusやerrorThrownの値を見て処理を切り分けるか、単純に通信に失敗した際の処理を記述します。
+
+        //this;
+        //thisは他のコールバック関数同様にAJAX通信時のオプションを示します。
+
+        //エラーメッセージの表示
+        console.log('Error : ' + errorThrown);
+      }
+    });
+
+
+//    }, 250 );
+    }, 1000 );
+
+	}
+  </script>
+  <!--<script>
+	var client; // MQTTのクライアントです
+	var clientId = "clientid-test"; // ClientIDを指定します。
+
+	function connect(){
+	    var user_name = "UedaTakeyuki@github";
+	    var pass = "tcJy9P8z61ztwF6K";
+	    var wsurl = "ws://free.mqtt.shiguredo.jp:8080/mqtt";
+
+	    // WebSocketURLとClientIDからMQTT Clientを作成します
+	    client = new Paho.MQTT.Client(wsurl, clientId);
+//	    client = new Paho.MQTT.Client("free.mqtt.shiguredo.jp",8080, "/mqtt", clientId);
+
+	    // connectします
+	    client.connect({userName: user_name, password: pass, onSuccess:onConnect, onFailure: failConnect});
+
+	}
+
+	// 接続が失敗したら呼び出されます
+	function failConnect(e) {
+	    console.log("connect failed");
+	    console.log(e);
+	}
+
+	// 接続に成功したら呼び出されます
+	function onConnect() {
+	    console.log("onConnect");
+			subscribe();
+	}
+
+	// メッセージが到着したら呼び出されるコールバック関数
+	function onMessageArrived(message) {
+	    console.log("onMessageArrived:"+message.payloadString);
+      // データ追加
+      myLineChart.addData([parseFloat(message.payloadString)], "");
+      // 先頭データ削除
+      myLineChart.removeData();
+	}
+
+	function subscribe(){
+	    // コールバック関数を登録します
+	    client.onMessageArrived = onMessageArrived;
+
+	    var topic = "UedaTakeyuki@github/#";
+	    // Subscribeします
+	    client.subscribe(topic);
+	}
+	connect();
+	//subscribe();
+  </script>-->
+</head>
+<body>
+
+<!-- <div data-role="page" id="demo"> -->
+<div data-role="page">
+    
+<div data-role="header" data-position="fixed" data-disable-page-zoom="false">
+  <h1><?php echo TITLE?></h1>
+  <a data-role="button" data-inline="true" href="config.php?serial_id=<?php echo $_GET['serial_id']; ?>" data-icon="gear" data-transition="fade" data-ajax="false">設定変更</a>
+  <div class="ui-btn-right">
+    <a data-role="button" data-inline="true" href="logout.php?serial_id=<?php echo $_GET['serial_id']?>" data-transition="fade" data-ajax="false">ログアウト</a>
+  </div>
+</div>
+
+<div data-role="content">
+  <div class="row">
+<?php
+  foreach ($data_inis as $key => $value){
+    $dini = parse_ini_file($value);
+?>
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <!-- <h4><p>温度計測値:  <span id="temp_tag"></span> -->
+        <h4><p> <?php echo $dini["pname"]?> :  <span id="<?php echo $dini["dname"]?>_tag"></span>
+        <a href="./download.php?serial_id=<?php echo $_GET['serial_id']; ?>&name=<?php echo $dini["dname"]?>" rel="external">ダウンロード</a>
+        </p></h4>
+        <span style="font-size: 60%; padding: 20px">℃</span><br>
+        <!--<canvas id="myChart_tmp" width="400" height="200" style="padding: 10px"></canvas>-->
+        <canvas id="myChart_<?php echo $dini["dname"]?>" width="300" height="200" style="padding: 10px"></canvas>
+      </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
+<?php
+  }
+?>
+
+<?php if($ini["show_pic"]){ ?>
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <p>現場状況: <span id="pic_file_name"></span></p>
+        <img id="latest_pic" style="padding : 10px"></canvas>
+      </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
+<?php
+  }
+?>
+  </div><!-- <div class="row"> -->
+</div>
+
+<div data-role="footer" data-position="fixed" data-disable-page-zoom="false">
+    <h4>© Atelier UEDA🐸</h4>
+</div>
+</div> <!-- page -->
+
+</body>
+</html>
