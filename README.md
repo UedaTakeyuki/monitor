@@ -1,13 +1,13 @@
-# Monitor
 ![Monitor](https://github.com/UedaTakeyuki/monitor/blob/master/doc/monitor.jpg)
+# Monitor
 
-#Vision
+##Vision
 A simple data monitor as follows:
 - catch numerical data or picture from small terminal (named "Slider").
 - show latest
 - download
 
-# Architecture
+## Architecture
 Breaf architecture design of the MONITOR and SLIDERs.
 ![architecture](https://github.com/UedaTakeyuki/monitor/blob/master/doc/architecture.png)
 
