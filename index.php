@@ -30,14 +30,6 @@
 
   // データの設定ファイル一覧を取得
   $data_inis = glob("uploads/".$_GET['serial_id']."/*.dini");
-  /*
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-    print "name = ".$dini["name"];
-    print "unit = ".$dini["unit"];
-  }
-  exit;
-  */
 
 ?>
 
@@ -47,7 +39,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title><?php echo TITLE?></title>
+  <title><?=TITLE?></title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
   <!-- <script src="mqttws31.js" type="text/javascript"></script>-->
@@ -77,14 +69,12 @@
   //--------------------------
   // chart
   //--------------------------
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
-    var myChart_<?php echo $dini["dname"]?>;
-<?php
-  }
-?>
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+
+  var myChart_<?=$dini["dname"]?>;
+
+<?php endforeach ?>
 
   var chart_type = "time";
   var forced = "no";
@@ -92,19 +82,17 @@
 
   Chart.defaults.global.legend.display = false;
 
-
   var gLastTime; // 最後に受け取ったデータの時間。ここで明に受け取るファイル以外のファイルの時刻チェッック用
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
-    var gLastTime_<?php echo $dini["dname"]?>;
-<?php
-  }
-?>
+
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+
+  var gLastTime_<?=$dini["dname"]?>;
+
+<?php endforeach ?>
 
   var gIni = { // config.ini の設定値
-    'show_data_lows': <?php echo $ini["show_data_lows"]; ?>
+    'show_data_lows': <?=$ini["show_data_lows"]; ?>
   };
 
   window.onload = function (){
@@ -120,14 +108,12 @@
                     });
 
   // コンテキストの取得
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
-    var ctx_<?php echo $dini["dname"]?> = document.getElementById("myChart_<?php echo $dini["dname"]?>").getContext("2d");;
-<?php
-  }
-?>
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+
+  var ctx_<?=$dini["dname"]?> = document.getElementById("myChart_<?=$dini["dname"]?>").getContext("2d");;
+
+<?php endforeach ?>
 
   // イニシャルデータ
   var data = {
@@ -135,7 +121,6 @@
     datasets: [
     ]
   };
-
 
   function toMyTime(dt){
     mydate = new Date(Date.parse(dt));
@@ -183,22 +168,20 @@
     chart.update();
   };
 
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
-  function onReceiveStreamValues_<?php echo $dini["dname"]?>(j_data) {
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+
+  function onReceiveStreamValues_<?=$dini["dname"]?>(j_data) {
     // 最後のデータの時間を保存
     gLastTime = j_data[0].datetime;
     gLastTime_temp = gLastTime; 
 
     // グラフの更新
-    setMyGraph(j_data, myLineChart_<?php echo $dini["dname"]?>,"<?php echo $dini["dname"]?>_tag", " <?php echo $dini["unit"]?>");
-    myLineChart_<?php echo $dini["dname"]?>.update();
+    setMyGraph(j_data, myLineChart_<?=$dini["dname"]?>,"<?=$dini["dname"]?>_tag", " <?=$dini["unit"]?>");
+    myLineChart_<?=$dini["dname"]?>.update();
   };
-<?php
-  }
-?>
+
+<?php endforeach ?>
 
   // time chart の時間軸のフォーマット。momentjs の display format を指定
   var time = {
@@ -283,116 +266,66 @@
   //   data オブジェクトのコピー (JQuerry の extend) を渡す
   Chart.defaults.global.animation = false;
 
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
   config = new_config();
   setColor_onGraph(config.data.datasets[0]);
-  myLineChart_<?php echo $dini["dname"]?> = new Chart(ctx_<?php echo $dini["dname"]?>, config);
-  myLineChart_<?php echo $dini["dname"]?>.datasets = config.data.datasets;
-<?php
-  }
-?>
-  // オプション設定
-  //myLineChart.defaults.global.showScale = false;
-  // データ追加
-  //myLineChart.addData([0], "");
-  // 先頭データ削除
-  //myLineChart.removeData();
+  myLineChart_<?=$dini["dname"]?> = new Chart(ctx_<?php echo $dini["dname"]?>, config);
+  myLineChart_<?=$dini["dname"]?>.datasets = config.data.datasets;
+
+<?php endforeach ?>
 
     var iv = setInterval( function() {
 
       $.ajax({
-      type: "GET",
-//      url: "data.php",
-      url: "data.php",
-      //data: {serial_id: "00000000c4c423ee"},
-      data: {serial_id: "<?php echo $_GET['serial_id']; ?>",
-             show_data_lows: <?php echo $ini['show_data_lows']; ?>,
-             show_data_gnt: "<?php echo $ini['show_data_gnt']; ?>",
-             LastTime: gLastTime,
-             ILTimes: {
+        type: "GET",
+        url: "data.php",
+        data: {serial_id: "<?=$_GET['serial_id']; ?>",
+               show_data_lows: <?=$ini['show_data_lows']; ?>,
+               show_data_gnt: "<? = $ini['show_data_gnt']; ?>",
+               LastTime: gLastTime,
+               ILTimes: {
               // 以下、キーはファイル名（拡張子なし）
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
-    <?php echo $dini["fname"]?>: gLastTime_<?php echo $dini["dname"] ?>,
-<?php
-  }
-?>
-             }
-            },
-      dataType: "json",
-      /**
-       * Ajax通信が成功した場合に呼び出されるメソッド
-       */
-      success: function(data, dataType) 
-      {
-        //console.log('temp = ' + data.temp);
-        //console.log('humidity = ' + data.humidity);
-        //document.getElementById("pic_file_name").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
-        //$('#latest_pic').attr('src', '/tools/150721/uploads/'+"<?php echo $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
-        if(data){
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
-          if(data.<?php echo $dini["fname"]?>)
-            onReceiveStreamValues_<?php echo $dini["dname"]?>(data.<?php echo $dini["fname"]?>);
-<?php
-  }
-?>
-        }
-      },
-      /**
-       * Ajax通信が失敗場合に呼び出されるメソッド
-       */
-      error: function(XMLHttpRequest, textStatus, errorThrown) 
-      {
-        //通常はここでtextStatusやerrorThrownの値を見て処理を切り分けるか、単純に通信に失敗した際の処理を記述します。
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
 
-        //this;
-        //thisは他のコールバック関数同様にAJAX通信時のオプションを示します。
+               <?= $dini["fname"]?>: gLastTime_<?= $dini["dname"] ?>,
 
-        //エラーメッセージの表示
-        console.log('Error : ' + errorThrown);
-      }
-    });
+<?php endforeach ?>
+               }
+        },
+        dataType: "json",
+      })
+      .then(
+        function(data, dataType){
+          if(data){
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+
+            if(data.<?= $dini["fname"]?>)
+              onReceiveStreamValues_<?= $dini["dname"]?>(data.<?= $dini["fname"]?>);
+
+<?php endforeach ?>
+          }
+        },
+        function(XMLHttpRequest, textStatus, errorThrown){
+          console.log('Error : ' + errorThrown);
+      });
 
       $.ajax({
-      type: "GET",
-      url: "pic.php",
-      //data: {serial_id: "00000000c4c423ee"},
-      data: {serial_id: "<?php echo $_GET['serial_id']; ?>"},
-      dataType: "json",
-      /**
-       * Ajax通信が成功した場合に呼び出されるメソッド
-       */
-      success: function(data, dataType) 
-      {
-        //console.log("data.latest_pic_name = "+data.latest_pic_name);
-        document.getElementById("pic_file_name").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
-//        $('#latest_pic').attr('src', '/tools/151024/uploads/'+"<?php echo $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
-        $('#latest_pic').attr('src', 'uploads/'+"<?php echo $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
-      },
-      /**
-       * Ajax通信が失敗場合に呼び出されるメソッド
-       */
-      error: function(XMLHttpRequest, textStatus, errorThrown) 
-      {
-        //通常はここでtextStatusやerrorThrownの値を見て処理を切り分けるか、単純に通信に失敗した際の処理を記述します。
-
-        //this;
-        //thisは他のコールバック関数同様にAJAX通信時のオプションを示します。
-
-        //エラーメッセージの表示
-        console.log('Error : ' + errorThrown);
-      }
-    });
-
-
+        type: "GET",
+        url: "pic.php",
+        data: {serial_id: "<?= $_GET['serial_id']; ?>"},
+        dataType: "json",
+      })
+      .then(
+        function(data, dataType){
+          document.getElementById("pic_file_name").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
+          $('#latest_pic').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
+        },
+        function(XMLHttpRequest, textStatus, errorThrown){
+          console.log('Error : ' + errorThrown);
+      });
 //    }, 250 );
     }, 1000 );
 
@@ -464,31 +397,31 @@
 
 <div data-role="content">
   <div class="row">
-<?php
-  foreach ($data_inis as $key => $value){
-    $dini = parse_ini_file($value);
-?>
+
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+
       <div class="col-md-4 col-sm-6 col-xs-12">
         <!-- <h4><p>温度計測値:  <span id="temp_tag"></span> -->
-        <h4><p> <?php echo $dini["pname"]?> :  <span id="<?php echo $dini["dname"]?>_tag"></span>
-        <a href="./download.php?serial_id=<?php echo $_GET['serial_id']; ?>&name=<?php echo $dini["dname"]?>" rel="external">ダウンロード</a>
+        <h4><p> <?= $dini["pname"]?> :  <span id="<?= $dini["dname"]?>_tag"></span>
+        <a href="./download.php?serial_id=<?= $_GET['serial_id']; ?>&name=<?php echo $dini["dname"]?>" rel="external">ダウンロード</a>
         </p></h4>
         <span style="font-size: 60%; padding: 20px">℃</span><br>
         <!--<canvas id="myChart_tmp" width="400" height="200" style="padding: 10px"></canvas>-->
-        <canvas id="myChart_<?php echo $dini["dname"]?>" width="300" height="200" style="padding: 10px"></canvas>
+        <canvas id="myChart_<?= $dini["dname"]?>" width="300" height="200" style="padding: 10px"></canvas>
       </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
-<?php
-  }
-?>
 
-<?php if($ini["show_pic"]){ ?>
+<?php endforeach ?>
+
+<?php if($ini["show_pic"]): ?>
+
       <div class="col-md-4 col-sm-6 col-xs-12">
         <p>現場状況: <span id="pic_file_name"></span></p>
         <img id="latest_pic" style="padding : 10px"></canvas>
       </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
-<?php
-  }
-?>
+
+<?php endif ?>
+
   </div><!-- <div class="row"> -->
 </div>
 
