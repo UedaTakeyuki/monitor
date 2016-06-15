@@ -1,7 +1,7 @@
-![Monitor](https://github.com/UedaTakeyuki/monitor/blob/master/doc/monitor.jpg)
 # Monitor
+![Monitor](https://github.com/UedaTakeyuki/monitor/blob/master/doc/monitor.jpg)
 
-##Vision
+#Vision
 A simple data monitor as follows:
 - catch numerical data or picture from small terminal (named "Slider").
 - show latest
