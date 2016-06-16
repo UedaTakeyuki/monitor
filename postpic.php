@@ -14,7 +14,7 @@ $logfile->log('['.__LINE__.']'.'$command = '.$command);
 
 // 写真のコンパクションを行う
 if (isset($_POST['serial_id'])){
-  $command = "".$p['dirname']."/rmfiles.sh ".$p['dirname'].'/uploads/'.$_POST['serial_id']." jpeg &";
+  $command = "".$p['dirname']."/rmfiles.sh ".$p['dirname'].'/uploads/'.$_POST['serial_id']." jpeg mv &";
   $logfile->log('['.__LINE__.']'.'$command = '.$command);
   `$command`;
 }
