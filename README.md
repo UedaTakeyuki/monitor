@@ -2,10 +2,10 @@
 # Monitor
 
 ##Vision
-A simple data monitor as follows:
-- catch numerical data or picture from small terminal (named "Slider").
-- show latest
-- download
+A simple data monitor with following abilitys:
+- gather numerical data or picture from small terminal (called "Slider").
+- show latest data to mobile web.
+- provide download feature.
 
 ## Architecture
 Breaf architecture design of the MONITOR and SLIDERs.
