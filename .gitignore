@@ -6,7 +6,7 @@
 uploads/*
 vendor/*
 
-composer.lock
+#composer.lock
 composer.phar
 
 # 絶対に非管理
