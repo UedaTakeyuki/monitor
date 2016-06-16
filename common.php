@@ -5,6 +5,7 @@
 //
 //=====================================
 define('TITLE', 'MONITOR - a simple data monitor.');
+define('SHORT_TITLE', 'MONITOR');
 
 //=====================================
 //
