@@ -174,7 +174,7 @@
   function onReceiveStreamValues_<?=$dini["dname"]?>(j_data) {
     // 最後のデータの時間を保存
     gLastTime = j_data[0].datetime;
-    gLastTime_temp = gLastTime; 
+    gLastTime_<?=$dini["dname"]?> = gLastTime; 
 
     // グラフの更新
     setMyGraph(j_data, myLineChart_<?=$dini["dname"]?>,"<?=$dini["dname"]?>_tag", " <?=$dini["unit"]?>");
@@ -282,8 +282,8 @@
         url: "data.php",
         data: {serial_id: "<?=$_GET['serial_id']; ?>",
                show_data_lows: <?=$ini['show_data_lows']; ?>,
-               show_data_gnt: "<? = $ini['show_data_gnt']; ?>",
-               LastTime: gLastTime,
+//               show_data_gnt: "<? = $ini['show_data_gnt']; ?>",
+//               LastTime: gLastTime,
                ILTimes: {
               // 以下、キーはファイル名（拡張子なし）
 <?php foreach ($data_inis as $key => $value): ?>
