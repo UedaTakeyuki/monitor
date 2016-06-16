@@ -14,15 +14,11 @@ def sendToM2X(serial_id, name, data):
 
 	# M2Xの設定
   try:
-    #client = M2XClient(key='16909283a7c638d9e311f23b76d3ec0b')
-    #device = client.device('b821e9c48103db7454069782c0bdc0bd')
     client = M2XClient(client_key_str)
     device = client.device(device_str)
+    for key, value in device.stream:
+      client.stream('value') = device.stream('value')
     #client.stream_temperature = device.stream('temp') 
-    #client.stream_humidity = device.stream('humidity')
-    #client.stream_HumidityDeficit = device.stream('HumidityDeficit')
-    #client.stream_lux = device.stream('lux')
-    #client.stream_co2 = device.stream('co2')
   except:
     print "M2X not connected:", sys.exc_info()[0], sys.exc_info()[1]
 
@@ -35,5 +31,4 @@ def sendToM2X(serial_id, name, data):
     print "M2X send error:", sys.exc_info()[0], sys.exc_info()[1]
 
 if __name__ == '__main__':
-#    print sendToM2X("00000000790f4c7c", "temp", "20.5")
      print sendToM2X(sys.argv[1],sys.argv[2],sys.argv[3])
