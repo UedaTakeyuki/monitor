@@ -404,7 +404,7 @@
       <div class="col-md-4 col-sm-6 col-xs-12">
         <!-- <h4><p>温度計測値:  <span id="temp_tag"></span> -->
         <h4><p> <?= $dini["pname"]?> :  <span id="<?= $dini["dname"]?>_tag"></span>
-        <a href="./download.php?serial_id=<?= $_GET['serial_id']; ?>&name=<?php echo $dini["dname"]?>" rel="external">ダウンロード</a>
+        <a href="./download.php?serial_id=<?= $_GET['serial_id']; ?>&name=<?php echo $dini["fname"]?>" rel="external">ダウンロード</a>
         </p></h4>
         <span style="font-size: 60%; padding: 20px"><?=$dini["unit"]?></span><br>
         <!--<canvas id="myChart_tmp" width="400" height="200" style="padding: 10px"></canvas>-->
