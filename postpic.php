@@ -1,5 +1,6 @@
 <?php
 require_once("Log.php");
+
 $logfilename = "postpic.out.log";
 $logfile = &Log::factory('file', $logfilename, 'TEST'); 
 $logfile->log('['.__LINE__.']'.'*** STARTED ***');
@@ -21,29 +22,26 @@ if (isset($_POST['serial_id'])){
 if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
 
     try {
-
         // $_FILES['upfile']['error'] の値を確認
         switch ($_FILES['upfile']['error']) {
             case UPLOAD_ERR_OK: // OK
                 break;
-            case UPLOAD_ERR_NO_FILE:   // ファイル未選択
-                throw new RuntimeException('ファイルが選択されていません');
+            case UPLOAD_ERR_NO_FILE:
+                throw new RuntimeException('No FILE.');
             case UPLOAD_ERR_INI_SIZE:  // php.ini定義の最大サイズ超過
             case UPLOAD_ERR_FORM_SIZE: // フォーム定義の最大サイズ超過
-                throw new RuntimeException('ファイルサイズが大きすぎます');
+                throw new RuntimeException('Too Big.');
             default:
-                throw new RuntimeException('その他のエラーが発生しました');
+                throw new RuntimeException('Something wrong...');
         }
 
         // $_FILES['upfile']['mime']の値はブラウザ側で偽装可能なので、MIMEタイプを自前でチェックする
         $type = @exif_imagetype($_FILES['upfile']['tmp_name']);
-#        if (!in_array($type, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) {
         if (!in_array($type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG), true)) {
             throw new RuntimeException('画像形式が未対応です');
         }
 
-        // ファイルデータからSHA-1ハッシュを取ってファイル名を決定し、ファイルを保存する
-#        $path = sprintf('./uploads/%s%s', sha1_file($_FILES['upfile']['tmp_name']), image_type_to_extension($type));
+        // 保存する
         $pathData = pathinfo($_FILES['upfile']['name']);
         $path = sprintf('./uploads/'.$_POST['serial_id'].'/%s%s', $pathData["filename"], image_type_to_extension($type));
         if (!move_uploaded_file($_FILES['upfile']['tmp_name'], $path)) {
@@ -51,7 +49,6 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
         }
         chmod($path, 0644);
 
-#        $msg = ['green', 'ファイルは正常にアップロードされました'];
         $msg = array('green', 'ファイルは正常にアップロードされました');
 
     } catch (RuntimeException $e) {
@@ -60,32 +57,27 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
         $msg = array('red', $e->getMessage());
 
     }
-
+    header('Content-Type: application/xhtml+xml; charset=utf-8');
 }
 
-// XHTMLとしてブラウザに認識させる
-// (IE8以下はサポート対象外ｗ)
-header('Content-Type: application/xhtml+xml; charset=utf-8');
 ?>
+
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="ja">
 <head>
-  <title>画像アップロード</title>
+    <meta charset="UTF-8">
+    <title>post picture</title>
 </head>
 <body>
 <?php if (isset($msg)): ?>
-  <fieldset>
-    <legend>結果</legend>
-    <span style="color:<?=$msg[0]?>;"><?=$msg[1]?></span>
-  </fieldset>
+  <legend>結果</legend>
+  <span style="color:<?=$msg[0]?>;"><?=$msg[1]?></span>
 <?php endif; ?>
   <form enctype="multipart/form-data" method="post" action="">
-    <fieldset>
-      <legend>画像ファイルを選択(GIF, JPEG, PNGのみ対応)</legend>
-      <input type="text" name="serial_id" id="serial_id"/>
-      <input type="file" name="upfile" /><br />
-      <input type="submit" value="送信" />
-    </fieldset>
+    <legend>画像ファイルを選択</legend>
+    <input type="text" name="serial_id" id="serial_id"/>
+    <input type="file" name="upfile" /><br />
+    <input type="submit" value="送信" />
   </form>
 </body>
 </html>
