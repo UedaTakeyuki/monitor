@@ -26,9 +26,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   $configfile = __DIR__. "/uploads/".$_POST['serial_id']."/config.ini";
   $ini = parse_ini_file($configfile);
 
+  # 送信データに datetime がなかった場合はサーバの受信日時を設定
+  if (isset($_POST['datetime']) && $_POST['datetime'] != ""){
+    $datetime = $_POST['datetime'];
+  } else {
+    # 2016/7/3  18:59:05
+    $logfile->log('['.__LINE__.']'.'$datetime created. ');
+    $datetime = date("Y/m/d H:i:s");
+  }
+  $logfile->log('['.__LINE__.']'.'$datetime = '.$datetime);
+
   # データを保存、もしくは転送
   $fp = fopen(__DIR__. "/uploads/".$_POST['serial_id']."/".$_POST['name'].'.csv', 'a');
-  fwrite($fp, $_POST['datetime'].",".$_POST['data'].PHP_EOL);
+#  fwrite($fp, $_POST['datetime'].",".$_POST['data'].PHP_EOL);
+  fwrite($fp, $datetime.",".$_POST['data'].PHP_EOL);
 
   exit();
 }
