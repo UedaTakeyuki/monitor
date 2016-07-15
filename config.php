@@ -4,7 +4,8 @@ require_once("common.php");
 //ini_set( 'display_errors', 0 );
 // エラー出力する場合
 ini_set( 'display_errors', 1 );
-require_once("Log.php");
+require_once("vendor/autoload.php"); 
+#require_once("Log.php");
 $logfile = &Log::factory('file', 'config.out.log', 'TEST'); 
 
 // ログイン状態のチェック

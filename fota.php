@@ -3,7 +3,8 @@
 
 ini_set( 'display_errors', 0 ); // エラー出力しない場合
 #ini_set( 'display_errors', 1 ); // エラー出力する場合
-require_once("Log.php");
+require_once("vendor/autoload.php"); 
+#require_once("Log.php");
 $logfilename = "fota.out.log";
 $logfile = &Log::factory('file', $logfilename, 'TEST'); 
 $logfile->log('['.__LINE__.']'.'*** STARTED ***');
