@@ -1,5 +1,10 @@
 <?php
-require_once("Log.php");
+require_once("vendor/autoload.php"); 
+#require_once("Log.php");
+
+spl_autoload_register(function($class) {
+  require $class . ".class.php";
+});
 
 $logfilename = "postpic.out.log";
 $logfile = &Log::factory('file', $logfilename, 'TEST'); 
@@ -12,12 +17,19 @@ $command = "".$p['dirname']."/compaction.sh ".$logfilename;
 $logfile->log('['.__LINE__.']'.'$command = '.$command);
 `$command`;
 
+$logfile->log('['.__LINE__.']'.'$_POST[serial_id] = '.$_POST['serial_id']);
+$logfile->log('['.__LINE__.']'.'$_POST[device] = '.$_POST['device']);
+$logfile->log('['.__LINE__.']'.'$_FILES[upfile][error] = '.$_FILES['upfile']['error']);
+$logfile->log('['.__LINE__.']'.'$_FILES[upfile][name] = '.$_FILES['upfile']['name']);
+
 // 写真のコンパクションを行う
+/*
 if (isset($_POST['serial_id'])){
   $command = "".$p['dirname']."/rmfiles.sh ".$p['dirname'].'/uploads/'.$_POST['serial_id']." jpeg mv &";
   $logfile->log('['.__LINE__.']'.'$command = '.$command);
   `$command`;
 }
+*/
 
 if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
 
@@ -34,7 +46,7 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
             default:
                 throw new RuntimeException('Something wrong...');
         }
-
+        /*
         // $_FILES['upfile']['mime']の値はブラウザ側で偽装可能なので、MIMEタイプを自前でチェックする
         $type = @exif_imagetype($_FILES['upfile']['tmp_name']);
         if (!in_array($type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG), true)) {
@@ -48,12 +60,13 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
             throw new RuntimeException('ファイル保存時にエラーが発生しました');
         }
         chmod($path, 0644);
+        */
+        SavePic::save();
 
         $msg = array('green', 'ファイルは正常にアップロードされました');
 
     } catch (RuntimeException $e) {
 
-#        $msg = ['red', $e->getMessage()];
         $msg = array('red', $e->getMessage());
 
     }
