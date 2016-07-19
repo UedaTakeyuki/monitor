@@ -71,9 +71,11 @@
   //--------------------------
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
   var myChart_<?=$dini["dname"]?>;
 
+<?php   endif; ?>
 <?php endforeach ?>
 
   var chart_type = "time";
@@ -86,9 +88,11 @@
 
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
   var gLastTime_<?=$dini["dname"]?>;
 
+<?php   endif; ?>
 <?php endforeach ?>
 
   var gIni = { // config.ini の設定値
@@ -110,9 +114,11 @@
   // コンテキストの取得
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
   var ctx_<?=$dini["dname"]?> = document.getElementById("myChart_<?=$dini["dname"]?>").getContext("2d");;
 
+<?php   endif; ?>
 <?php endforeach ?>
 
   // イニシャルデータ
@@ -170,6 +176,7 @@
 
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
   function onReceiveStreamValues_<?=$dini["dname"]?>(j_data) {
     // 最後のデータの時間を保存
@@ -181,6 +188,7 @@
     myLineChart_<?=$dini["dname"]?>.update();
   };
 
+<?php   endif; ?>
 <?php endforeach ?>
 
   // time chart の時間軸のフォーマット。momentjs の display format を指定
@@ -268,11 +276,14 @@
 
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
+
   config = new_config();
   setColor_onGraph(config.data.datasets[0]);
   myLineChart_<?=$dini["dname"]?> = new Chart(ctx_<?php echo $dini["dname"]?>, config);
   myLineChart_<?=$dini["dname"]?>.datasets = config.data.datasets;
 
+<?php   endif; ?>
 <?php endforeach ?>
 
     var iv = setInterval( function() {
@@ -288,9 +299,11 @@
               // 以下、キーはファイル名（拡張子なし）
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
                <?= $dini["fname"]?>: gLastTime_<?= $dini["dname"] ?>,
 
+<?php   endif; ?>
 <?php endforeach ?>
                }
         },
@@ -301,10 +314,12 @@
           if(data){
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
             if(data.<?= $dini["fname"]?>)
               onReceiveStreamValues_<?= $dini["dname"]?>(data.<?= $dini["fname"]?>);
 
+<?php   endif; ?>
 <?php endforeach ?>
           }
         },
@@ -312,20 +327,45 @@
           console.log('Error : ' + errorThrown);
       });
 
+
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+<?php   if (isset($dini["image_type"])): ?>
+
       $.ajax({
         type: "GET",
         url: "pic.php",
-        data: {serial_id: "<?= $_GET['serial_id']; ?>"},
+        data: {serial_id: "<?= $_GET['serial_id']; ?>", device: "<?= $dini["dname"] ?>"},
         dataType: "json",
       })
       .then(
         function(data, dataType){
-          document.getElementById("pic_file_name").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
-          $('#latest_pic').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
+          document.getElementById("pic_file_name_<?= $dini["dname"] ?>").innerHTML = data.latest_pic_name.slice(0,4) + "年" + data.latest_pic_name.substring(4,6) + "月" + data.latest_pic_name.substring(6,8) + "日" + data.latest_pic_name.substring(8,10) + "時" + data.latest_pic_name.substring(10,12) + "分" + data.latest_pic_name.substring(12,14) + "秒";
+          if (data.device == ""){
+            // no device specified
+            if (data.ymd == ""){
+              $('#latest_pic_<?= $dini["dname"] ?>').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
+            } else {
+              $('#latest_pic_<?= $dini["dname"] ?>').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.ymd+"/"+data.latest_pic_name);
+            }
+          } else {
+            // device specified
+            if (data.ymd == ""){
+              $('#latest_pic_<?= $dini["dname"] ?>').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.device+"/"+data.latest_pic_name);
+            } else {
+              $('#latest_pic_<?= $dini["dname"] ?>').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.device+"/"+data.ymd+"/"+data.latest_pic_name);
+            }
+          }
+//          $('#latest_pic').attr('src', 'uploads/'+"<?= $_GET['serial_id'];?>"+"/"+data.latest_pic_name);
         },
         function(XMLHttpRequest, textStatus, errorThrown){
           console.log('Error : ' + errorThrown);
       });
+
+<?php   endif; ?>
+<?php endforeach ?>
+
+      
 //    }, 250 );
     }, 1000 );
 
@@ -400,6 +440,7 @@
 
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>
+<?php   if (!isset($dini["image_type"])): ?>
 
       <div class="col-md-4 col-sm-6 col-xs-12">
         <!-- <h4><p>温度計測値:  <span id="temp_tag"></span> -->
@@ -411,16 +452,20 @@
         <canvas id="myChart_<?= $dini["dname"]?>" width="300" height="200" style="padding: 10px"></canvas>
       </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
 
+<?php   endif; ?>
 <?php endforeach ?>
 
-<?php if($ini["show_pic"]): ?>
+<?php foreach ($data_inis as $key => $value): ?>
+<?php   $dini = parse_ini_file($value); ?>
+<?php   if (isset($dini["image_type"])): ?>
 
       <div class="col-md-4 col-sm-6 col-xs-12">
-        <p>現場状況: <span id="pic_file_name"></span></p>
-        <img id="latest_pic" style="padding : 10px"></canvas>
+        <p><?= $dini["pname"] ?> <span id="pic_file_name_<?= $dini["dname"] ?>"></span></p>
+        <img id="latest_pic_<?= $dini["dname"] ?>" style="padding : 10px"></canvas>
       </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
 
-<?php endif ?>
+<?php   endif; ?>
+<?php endforeach ?>
 
   </div><!-- <div class="row"> -->
 </div>
