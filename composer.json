@@ -10,6 +10,7 @@
 	],
 	"require": {
 		"pear-pear.php.net/PEAR" : "*",
-		"pear-pear.php.net/Log" : "*"
+		"pear-pear.php.net/Log" : "*",
+        "phpunit/phpunit": "4.*.*"
 	}
 }
