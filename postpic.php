@@ -1,5 +1,17 @@
 <?php
-require_once("vendor/autoload.php"); 
+/**
+ * [API] Post pic.
+ * 
+ * Use HTTP POST method for posting pic file from slider to the monitor.
+ * 
+ * Requires $_POST['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+ 
+ require_once("vendor/autoload.php"); 
 #require_once("Log.php");
 
 spl_autoload_register(function($class) {

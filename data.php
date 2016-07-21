@@ -1,5 +1,20 @@
 <?php
-date_default_timezone_set("Asia/Tokyo");
+/**
+ * [API] Get fresh sensor data.
+ * 
+ * Sensors shoud be specified by .dini settings for the account.
+ * Return data as JSON.
+ * Latest data than $_GET[ILTimes] if specified.
+ * 
+ * Requires $_GET['serial_id']
+ * Return json[SENSOR_NAME]=array("datetime" => , "data" => )
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+ 
+ date_default_timezone_set("Asia/Tokyo");
 
 ini_set( 'display_errors', 0 ); // エラー出力しない場合
 #ini_set( 'display_errors', 1 ); // エラー出力する場合

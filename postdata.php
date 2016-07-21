@@ -1,4 +1,20 @@
 <?php
+/**
+ * [API] Post data.
+ * 
+ * Use HTTP POST method for posting data from slider to the monitor.
+ * 
+ * Requires $_POST['serial_id']
+ *          $_POST['name']
+ *          $_POST['data']
+ * 
+ * Option   $_POST['datetime'] server time is used in case not specified.
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+
 require_once("vendor/autoload.php"); 
 #require_once("Log.php");
 $logfilename = "postdata.out.log";

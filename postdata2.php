@@ -1,5 +1,21 @@
 <?php
-require_once("Log.php");
+/**
+ * [API] Post one line data.
+ * 
+ * Add a line to the file.
+ * Using for:
+ *   vmstat infos of slider. 
+ * 
+ * Requires $_POST['serial_id']
+ *          $_POST['filename']
+ *          $_POST['textstr']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+ 
+ require_once("Log.php");
 $logfilename = "postdata2.out.log";
 $logfile = &Log::factory('file', $logfilename, 'TEST'); 
 $logfile->log('['.__LINE__.']'.'*** STARTED ***');

@@ -1,5 +1,19 @@
 <?php
-require_once("common.php");
+/**
+ * Config settings.
+ * 
+ * 1. Confirm login.
+ * 2. show FORM of config settings.
+ * 3. post
+ * 
+ * Requires $_GET['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+ 
+ require_once("common.php");
 // エラー出力しない場合
 //ini_set( 'display_errors', 0 );
 // エラー出力する場合

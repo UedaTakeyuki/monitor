@@ -1,4 +1,16 @@
 <?php
+/**
+ * Logout.
+ * 
+ * Logout.
+ * 
+ * Requires $_GET['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+
   ini_set( 'display_errors', 0 ); // エラー出力しない場合
   #ini_set( 'display_errors', 1 ); // エラー出力する場合
 

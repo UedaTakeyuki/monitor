@@ -1,5 +1,19 @@
 <?php
-  date_default_timezone_set("Asia/Tokyo");
+/**
+ * Main application of Monitor.
+ * 
+ * Main application of Monitor.
+ * 1. Confirm login
+ * 2. Retrun application skelton and js apps which get fresh data and pics and refresh page.
+ * 
+ * Requires $_GET['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+ 
+ date_default_timezone_set("Asia/Tokyo");
   session_start();
 
   require_once("common.php");

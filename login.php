@@ -1,5 +1,16 @@
 <!-- http://d.hatena.ne.jp/replication/20100828/1282994791 -->
 <?php
+/**
+ * Login.
+ * 
+ * Login.
+ * 
+ * Requires $_GET['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
   session_start();
 
   require_once("common.php");

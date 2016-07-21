@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * [API] FOTA.
+ * 
+ * FOTA(Farmware update On The Air)
+ * Return FOTA settings provided for the account as JSON.
+ * 
+ * Requires $_GET['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
 
 ini_set( 'display_errors', 0 ); // エラー出力しない場合
 #ini_set( 'display_errors', 1 ); // エラー出力する場合

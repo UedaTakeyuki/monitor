@@ -1,4 +1,16 @@
 <?php
+/**
+ * Tell latest pic file name.
+ * 
+ * Tell latest pic file name follow by SavePic configration for the account.
+ * 
+ * Requires $_GET['serial_id']
+ * 
+ * @author Dr. Takeyuki UEDA
+ * @copyright Copyright© Atelier UEDA 2016 - All rights reserved.
+ *
+ */
+
 date_default_timezone_set("Asia/Tokyo");
 #ini_set( 'display_errors', 0 ); // エラー出力しない場合
 ini_set( 'display_errors', 1 ); // エラー出力する場合
