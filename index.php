@@ -465,13 +465,8 @@
         <!--<canvas id="myChart_tmp" width="400" height="200" style="padding: 10px"></canvas>-->
         <canvas id="myChart_<?= $dini["dname"]?>" width="300" height="200" style="padding: 10px"></canvas>
       </div><!-- <div class="col-md-4 col-sm-6 col-xs-12"> -->
-
-<?php   endif; ?>
-<?php endforeach ?>
-
-<?php foreach ($data_inis as $key => $value): ?>
-<?php   $dini = parse_ini_file($value); ?>
-<?php   if (isset($dini["image_type"])): ?>
+      
+<?php   elseif (isset($dini["image_type"])): ?>
 
       <div class="col-md-4 col-sm-6 col-xs-12">
         <p><?= $dini["pname"] ?> <span id="pic_file_name_<?= $dini["dname"] ?>"></span></p>
