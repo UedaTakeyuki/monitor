@@ -36,6 +36,8 @@ $fota = parse_ini_file($configfile);
 # 設定値の json への設定
 $json['restart']=$fota['restart'];
 $fota['restart']=null;
+$json['command']=$fota['command'];
+$fota['command']=null;
 
 # 設定値の上書き
 $fp = fopen($configfile, 'w');
