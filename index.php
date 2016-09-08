@@ -119,11 +119,43 @@
     // VUE
     //--------------------------
               var demo = new Vue({
-                      el: '#demo',
+                      el: '#demo.old',
                       data: {
                         message: '温度計測値'
                       }
                     });
+    var alart_vue = new Vue({
+      el: '#a1',
+      data: {
+        message: '2016年9月7日、水警報受信',
+      },
+      methods: {
+        release: function(){
+          // 表示を消す
+          $('#a1').removeClass("hidden");
+          alart_vue.message = data.water;
+          // alart.ini を消す
+          $.ajax({
+            type: "POST",
+            url: "postalart.php",
+            data: {
+              serial_id: "<?= $_GET['serial_id']; ?>",
+              name: "water",
+              status: "off"
+            },
+            dataType: "json",
+          })
+          .then(
+            function(data, dataType){
+            },
+            function(XMLHttpRequest, textStatus, errorThrown){
+              console.log('Error : ' + errorThrown);
+          });
+
+          
+        }
+      }
+    });
 
   // コンテキストの取得
 <?php foreach ($data_inis as $key => $value): ?>
@@ -379,6 +411,33 @@
 <?php   endif; ?>
 <?php endforeach ?>
 
+// alart.ini があれば
+<?php
+  $alarm_ini_file = __DIR__. "/uploads/".$_POST['serial_id']."/alart.ini";
+  if (!is_readable($alarm_ini_file)) {
+?>
+      $.ajax({
+        type: "POST",
+        url: "alart.php",
+        data: {serial_id: "<?= $_GET['serial_id']; ?>"},
+        dataType: "json",
+      })
+      .then(
+        function(data, dataType){
+          if (data.water != ""){
+            $('#a1').removeClass("hidden");
+            alart_vue.message = data.water;
+          } else {
+            $('#a1').addClass("hidden");
+            alart_vue.message = "";
+          }
+        },
+        function(XMLHttpRequest, textStatus, errorThrown){
+          console.log('Error : ' + errorThrown);
+        });
+<?php
+  }
+?>
       
 //    }, 250 );
     }, 1000 );
@@ -450,7 +509,20 @@
 </div>
 
 <div data-role="content">
-  <div class="row">
+
+<?php
+# alart.ini があれば
+  $alarm_ini_file = __DIR__. "/uploads/".$_POST['serial_id']."/alart.ini";
+  if (!is_readable($alarm_ini_file)) {
+?>
+  <div id="a1" class="hidden alert alert-danger" role="alert">
+    水警報、{{ message }}受信<button v-on:click="release()" type="button" class="btn btn-danger">解除</button>
+  </div>
+<?php
+  }
+?>
+  
+<div class="row">
 
 <?php foreach ($data_inis as $key => $value): ?>
 <?php   $dini = parse_ini_file($value); ?>

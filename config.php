@@ -79,7 +79,6 @@ switch($_SERVER["REQUEST_METHOD"]) {
 	case "POST":
 	  $logfile->log('['.__LINE__.']'.'$_POST["serial_id"] = '.$_POST["serial_id"]);
 	  $logfile->log('['.__LINE__.']'.'$_POST["show_data_lows"] = '.$_POST["show_data_lows"]);
-    $logfile->log('['.__LINE__.']'.'$_POST["show_pic"] = '.$_POST["show_pic"]);
     $logfile->log('['.__LINE__.']'.'$_POST["id"] = '.$_POST["id"]);
     $logfile->log('['.__LINE__.']'.'$_POST["pw"] = '.md5($_POST["pw"]));
 		if (!isset($_POST["serial_id"])){
@@ -91,7 +90,6 @@ switch($_SERVER["REQUEST_METHOD"]) {
 		}
     // 設定 show_data_lows=11
     if (isset($_POST["show_data_lows"])){$ini["show_data_lows"]=$_POST["show_data_lows"];};
-    if (isset($_POST["show_pic"])){$ini["show_pic"]=$_POST["show_pic"];};
     if (isset($_POST["id"])){$ini["id"]=$_POST["id"];};
     if (isset($_POST["pw"])&& $_POST["pw"]!==""){$ini["pw"]=md5($_POST["pw"]);};
 
@@ -119,11 +117,9 @@ switch($_SERVER["REQUEST_METHOD"]) {
   <title><?= SHORT_TITLE ?> 設定変更</title>
   <!-- <script src="mqttws31.js" type="text/javascript"></script>-->
   <script src="Chart.js"></script>
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-  <script src="m2x-2.0.3.js"></script>
-<!--  <script src="jquery-1.10.2.min.js"></script> -->
-  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
 </head>
 <body onLoad="selecter_select()">
   <script type="text/javascript">
@@ -131,7 +127,6 @@ switch($_SERVER["REQUEST_METHOD"]) {
   　function selecter_select(){
       //該当するselectのIDにセット
       $('#show_data_lows').val(<?= $ini["show_data_lows"] ?>);
-      $('#show_pic').val(<?= $ini["show_pic"] ?>);
       //jquery mobile用の処理
       $('select').selectmenu('refresh',true);
     }
@@ -156,14 +151,6 @@ switch($_SERVER["REQUEST_METHOD"]) {
         <option value="24">24データ</option>
         <option value="168">168データ</option>
     	</select>
-    </div>
-    <div data-role="fieldcontain">
-      <label for="show_pic">現場写真の表示</label>
-      <select name="show_pic" id="show_pic" data-native-menu="true">
-      <!-- <option value="">選択してください</option> -->
-        <option value="0">非表示</option>
-        <option value="1">表示</option>
-      </select>
     </div>
     <div data-role="fieldcontain">
       <label for="id">ログインID</label>

@@ -10,3 +10,4 @@ vendor/*
 composer.phar
 
 # 絶対に非管理
+sc.php
