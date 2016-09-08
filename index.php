@@ -414,7 +414,7 @@
 // alart.ini があれば
 <?php
   $alarm_ini_file = __DIR__. "/uploads/".$_GET['serial_id']."/alart.ini";
-  if (!is_readable($alarm_ini_file)) {
+  if (is_readable($alarm_ini_file)) {
 ?>
       $.ajax({
         type: "POST",
@@ -513,7 +513,7 @@
 <?php
 # alart.ini があれば
   $alarm_ini_file = __DIR__. "/uploads/".$_GET['serial_id']."/alart.ini";
-  if (!is_readable($alarm_ini_file)) {
+  if (is_readable($alarm_ini_file)) {
 ?>
   <div id="a1" class="hidden alert alert-danger" role="alert">
     水警報、{{ message }}受信<button v-on:click="release()" type="button" class="btn btn-danger">解除</button>
