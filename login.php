@@ -37,7 +37,7 @@
     if (isset($_GET['serial_id'])){
       $serial_id = $_GET['serial_id'];
     }
-    if(isset($_SERVER['HTTP_REFERER'])){
+    if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])){
       ################################
       # リファラを戻り先アドレスとして保存 #
       ################################
