@@ -53,16 +53,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   if (isset($ini[$_POST['name']])){
     $datetime = date("Y年m月d日H時i分s秒"); # current time.
     if ($_POST['status'] == "on"){
-      # emargency call if first alart
       if ($ini[$_POST['name']] == ""){
+        # emargency call if first alart
         $query = ['serial_id'=>$_POST['serial_id'],'name'=>'water'];
-//        $contents = file_get_contents(ALART_CALL_URL.http_build_query($query));
-        $contents = file_get_contents(ALART_CALL_URL);
-      }
+        $contents = file_get_contents(ALART_CALL_URL.'?'.http_build_query($query));
+        #$contents = file_get_contents(ALART_CALL_URL);
       
-      # set alart state.
-      $ini[$_POST['name']] = $datetime;
-      $logfile->log('['.__LINE__.']'.'Set '. $_POST['name']. ' ON at $datetime = '.$datetime);
+        # set alart state.
+        $ini[$_POST['name']] = $datetime;
+        $logfile->log('['.__LINE__.']'.'Set '. $_POST['name']. ' ON at $datetime = '.$datetime);
+      }
     } else {
       $ini[$_POST['name']] = "";
       $logfile->log('['.__LINE__.']'.'Set '. $_POST['name']. ' OFF at $datetime = '.$datetime);
