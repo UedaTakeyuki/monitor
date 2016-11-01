@@ -501,7 +501,13 @@
 <div data-role="page">
     
 <div data-role="header" data-position="fixed" data-disable-page-zoom="false">
+
+<?php   if (isset($ini["title"])): ?>
+  <h1><?php echo $ini["title"]?></h1>
+<?php   else: ?>
   <h1><?php echo TITLE?></h1>
+<?php   endif; ?>
+
   <a data-role="button" data-inline="true" href="config.php?serial_id=<?php echo $_GET['serial_id']; ?>" data-icon="gear" data-transition="fade" data-ajax="false">設定変更</a>
   <div class="ui-btn-right">
     <a data-role="button" data-inline="true" href="logout.php?serial_id=<?php echo $_GET['serial_id']?>" data-transition="fade" data-ajax="false">ログアウト</a>
