@@ -4,6 +4,7 @@
 *.csv
 
 uploads/*
+!uploads/org
 vendor/*
 
 #composer.lock
