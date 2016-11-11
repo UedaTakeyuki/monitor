@@ -125,17 +125,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?php echo TITLE?></title>
-  <!-- <script src="mqttws31.js" type="text/javascript"></script>-->
-  <script src="Chart.js"></script>
+<!--
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-  <script src="m2x-2.0.3.js"></script>
-<!--  <script src="jquery-1.10.2.min.js"></script> -->
   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="custom-scripting.js"></script>
   <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+-->
+  <link rel="stylesheet" href="js/jquery.mobile-1.3.1.min.css" />
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="custom-scripting.js"></script>
+  <script src="js/jquery.mobile-1.3.1.min.js"></script>
 
 
 </head>

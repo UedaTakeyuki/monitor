@@ -10,5 +10,10 @@ vendor/*
 #composer.lock
 composer.phar
 
+js/*
+!js/jquery.mobile-1.3.1.zip
+
+node_modules/*
+
 # 絶対に非管理
 sc.php
