@@ -69,7 +69,11 @@
 #    if ($_POST["userid"] == "mcc" && $_POST["password"] == "mcc") {
     if ($_POST["userid"] == $ini["id"] && md5($_POST["password"]) == $ini["pw"]) {
       // 戻り先（パラメタ付き）を現在のセッションから取得      
-      $return_url = $_SESSION["return_url"];
+      if (isset($_SESSION["return_url"])){
+        $return_url = $_SESSION["return_url"];
+      } else {
+        $return_url = 'index.php?serial_id='.$_POST["serial_id"];
+      }
       $logfile->log('['.__LINE__.']'.'$return_url = '.$return_url);
 
       // 旧セッションの LOGINS を覚えておく
