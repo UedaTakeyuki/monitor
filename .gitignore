@@ -5,6 +5,9 @@
 
 uploads/*
 !uploads/org
+!uploads/0000000000000000
+uploads/0000000000000000/*.csv
+uploads/0000000000000000/video*
 vendor/*
 
 #composer.lock
