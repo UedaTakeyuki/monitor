@@ -42,11 +42,29 @@
       # リファラを戻り先アドレスとして保存 #
       ################################
 
+    /* old 
       # リファラが login.php の時（なぜだ？）も index.php を
       if (explode("?", basename($_SERVER['HTTP_REFERER']))[0] == "login.php"){
         $_SESSION["return_url"]="index.php?serial_id=".$serial_id;
       } else {
         $_SESSION["return_url"]=$_SERVER['HTTP_REFERER'];
+      }
+    */
+      // 外部URLから index.php を開こうとして login.php にくると、index.php ではなく
+      // 外部URLがリファラになる。無条件にリファラに戻るのではなく要チェック
+      switch (explode("?", basename($_SERVER['HTTP_REFERER']))[0]){
+        case "login.php":
+          $_SESSION["return_url"]="index.php?serial_id=".$serial_id;
+          break;
+        case "index.php":
+          $_SESSION["return_url"]="index.php?serial_id=".$serial_id;
+          break;
+        case "config.php":
+          $_SESSION["return_url"]="config.php?serial_id=".$serial_id;
+          break;
+        default:
+          $_SESSION["return_url"]="index.php?serial_id=".$serial_id;
+          break;
       }
     } else {
       # リファラがなければ index.php を戻り先アドレスとして保存
