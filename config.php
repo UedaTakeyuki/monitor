@@ -136,7 +136,8 @@ switch($_SERVER["REQUEST_METHOD"]) {
     
 <div data-role="header" data-position="fixed" data-disable-page-zoom="false">
     <h1><?= SHORT_TITLE ?> 設定変更</h1>
-    <a href="<?= $_SESSION['return_url']?>" data-rel="back">戻る</a>
+    <!-- <a href="<?= $_SESSION['return_url']?>" data-rel="back">戻る</a> -->
+    <a href="index.php?serial_id=<?= $serial_id?>" data-rel="back">戻る</a>
     <a href="logout.php?serial_id=<?= $serial_id?>" data-transition="fade" data-ajax="false">ログアウト</a>
 </div>
 
