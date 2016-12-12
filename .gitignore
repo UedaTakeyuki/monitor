@@ -3,6 +3,8 @@
 *.log
 *.csv
 
+setdate_milli
+
 uploads/*
 !uploads/org
 !uploads/0000000000000000
