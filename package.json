@@ -1,0 +1,32 @@
+{
+  "name": "monitor",
+  "version": "1.0.0",
+  "description": "a simple data monitor",
+  "main": "custom-scripting.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UedaTakeyuki/monitor.git"
+  },
+  "keywords": [
+    "data",
+    "monitor"
+  ],
+  "author": "Takeyuki UEDA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UedaTakeyuki/monitor/issues"
+  },
+  "devDependencies": {
+    "bootstrap": "^3.3.6",
+    "chart.js": "^2.3.0",
+    "jquery": "^1.9.1",
+    "vue": "^1.0.28"
+  }
+}
