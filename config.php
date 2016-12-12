@@ -116,15 +116,16 @@ switch($_SERVER["REQUEST_METHOD"]) {
 
   <title><?= SHORT_TITLE ?> 設定変更</title>
   <!-- <script src="mqttws31.js" type="text/javascript"></script>-->
-<!--
-  <script src="Chart.js"></script>
+<?php   if ($cdn): ?>
+  <!-- <script src="Chart.js"></script>-->
   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
   <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
--->
+<?php   else: ?>
   <link rel="stylesheet" href="js/jquery.mobile-1.3.1.min.css" />
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="js/jquery.mobile-1.3.1.min.js"></script>
+<?php   endif; ?>
 </head>
 <body onLoad="selecter_select()">
   <script type="text/javascript">

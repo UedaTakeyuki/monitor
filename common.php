@@ -15,6 +15,13 @@ define('TITLE', 'MONITOR - a simple data monitor.');
 define('SHORT_TITLE', 'MONITOR');
 
 /**
+ * Common flag.
+ * 
+ */
+//$cdn = false;
+$cdn = true;
+
+/**
  * Common Functions.
  * 
  */
