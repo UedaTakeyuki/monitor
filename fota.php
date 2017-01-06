@@ -30,7 +30,11 @@ $logfile->log('['.__LINE__.']'.'$command = '.$command);
 `$command`;
 
 # 設定の読み込み
-$configfile = "uploads/".$_GET['serial_id']."/fota.ini";
+if (isset($_GET['file'])){
+	$configfile = "uploads/".$_GET['serial_id']."/".$_GET['file'];	
+} else {
+	$configfile = "uploads/".$_GET['serial_id']."/fota.ini";
+}
 $fota = parse_ini_file($configfile);
 
 # 設定値の json への設定
