@@ -34,10 +34,14 @@ $configfile = "uploads/".$_GET['serial_id']."/fota.ini";
 $fota = parse_ini_file($configfile);
 
 # 設定値の json への設定
-$json['restart']=$fota['restart'];
-$fota['restart']=null;
-$json['command']=$fota['command'];
-$fota['command']=null;
+if (array_key_exists('restart',$fota)){
+  $json['restart']=$fota['restart'];
+  $fota['restart']=null;
+}
+if (array_key_exists('command',$fota)){
+  $json['command']=$fota['command'];
+  $fota['command']=null;
+}
 
 # 設定値の上書き
 $fp = fopen($configfile, 'w');
