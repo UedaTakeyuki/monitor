@@ -18,8 +18,8 @@ define('SHORT_TITLE', 'MONITOR');
  * Common flag.
  * 
  */
-//$cdn = false;
-$cdn = true;
+$cdn = false;
+//$cdn = true;
 
 /**
  * Common Functions.
