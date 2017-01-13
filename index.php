@@ -236,6 +236,10 @@
     str = (mydate.getMonth() + 1) + "/" +
           mydate.getDate() + " " +
           toMyTime2(dt);
+/*    str = mydate.getFullYear() + "/" +
+          (mydate.getMonth() + 1) + "/" +
+          mydate.getDate() + " " +
+          toMyTime2(dt);*/
     return str;
   };
 
