@@ -233,6 +233,21 @@
           (mydate.getMonth() + 1) + "月" +
           mydate.getDate() + "日 " +
           toMyTime2(dt);*/
+/*    str = (mydate.getMonth() + 1) + "/" +
+          mydate.getDate() + " " +
+          toMyTime2(dt);*/
+    str = mydate.getFullYear() + "/" +
+          (mydate.getMonth() + 1) + "/" +
+          mydate.getDate() + " " +
+          toMyTime2(dt);
+    return str;
+  };
+  function toMyDateTime2_wo_yyyy(dt){
+    mydate = new Date(dt);
+/*    str = mydate.getFullYear() + "年" +
+          (mydate.getMonth() + 1) + "月" +
+          mydate.getDate() + "日 " +
+          toMyTime2(dt);*/
     str = (mydate.getMonth() + 1) + "/" +
           mydate.getDate() + " " +
           toMyTime2(dt);
@@ -253,7 +268,7 @@
       chart.config.data.datasets[0].data.push(j_data[i].data.toFixed(1));
     }
     // グラフ領域のタグの描画
-    tag_val_string = toMyDateTime2(j_data[0].datetime) + ", " + j_data[0].data.toFixed(1) +unit_str;
+    tag_val_string = toMyDateTime2_wo_yyyy(j_data[0].datetime) + ", " + j_data[0].data.toFixed(1) +unit_str;
     document.getElementById(tag).innerHTML = tag_val_string;
 
     chart.update();
