@@ -11,7 +11,7 @@ import json
 import requests
 
 # 定数
-server_url_base = "http://gal4.uedasoft.com/" # Server 毎に変更が必用
+server_url_base = "http://localhost/" # Server 毎に変更が必用
 url_data = server_url_base + 'postdata.php'
 
 def on_connect(client, userdata, rc):
