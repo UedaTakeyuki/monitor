@@ -31,6 +31,5 @@ if __name__ == '__main__':
     client.on_message = on_message
 
     client.connect("127.0.0.1", 1883, 60)
-    #client.connect("gal4.uedasoft.com", 1883, 60)
 
     client.loop_forever()
