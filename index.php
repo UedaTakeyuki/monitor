@@ -147,6 +147,10 @@
   };
 
   window.onload = function (){
+    // IE ajax キャッシュの抑止
+    $.ajaxSetup({
+      cache: false,
+    });
 
     //--------------------------
     // VUE
