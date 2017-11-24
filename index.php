@@ -84,7 +84,8 @@
   <!-- BOOTSTRAP end -->
 <?php   else: ?>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>-->
-  <script src="node_modules/chart.js/node_modules/moment/min/moment.min.js"></script>
+  <!-- old path <script src="node_modules/chart.js/node_modules/moment/min/moment.min.js"></script> -->
+  <script src="node_modules/moment/min/moment.min.js"></script>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.5/Chart.min.js"></script>-->
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
   <!--<link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />-->
