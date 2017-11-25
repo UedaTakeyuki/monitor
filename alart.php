@@ -35,9 +35,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   } else {exit;}
 
   $alarm_ini_file = __DIR__. "/uploads/".$_POST['serial_id']."/alart.ini";
-  
+  //$logfile->log('['.__LINE__.']'.'alart.ini file = '.$alarm_ini_file);
+
   # confirm alarm.ini file existance and read/write ability.
   if (!is_readable($alarm_ini_file)) {exit;}
+  //$logfile->log('['.__LINE__.']'.'alart.ini is readable.');
   
   # read alarm.ini
   $ini = parse_ini_file($alarm_ini_file);
@@ -50,6 +52,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   header("Access-Control-Allow-Origin: *");
   header('Content-Type: application/json');
   $json_str = json_encode( $json );
+//  $logfile->log('['.__LINE__.']'.'$json_str = '.$json_str);
   echo $json_str;
   exit;
 }
