@@ -17,4 +17,5 @@ Breaf architecture design of the MONITOR and SLIDERs.
 ### desktop
 ![desktop](https://github.com/UedaTakeyuki/monitor/blob/master/doc/desktop.png)
 
-
+## install & settings
+- [wiki](https://github.com/UedaTakeyuki/monitor/wiki/Monitor)
