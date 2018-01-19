@@ -1,7 +1,7 @@
 ![Monitor](https://github.com/UedaTakeyuki/monitor/blob/master/doc/monitor.jpg)
 # Monitor
 
-##Vision
+## Vision
 A simple data monitor with following abilitys:
 - gather numerical data or picture from small terminal (called "Slider").
 - show latest data to mobile web.
