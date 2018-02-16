@@ -58,7 +58,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.5/Chart.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <!--<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+  <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
   <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
 
   <!-- VUE start -->
@@ -79,6 +81,7 @@
   <script src="node_modules/chart.js/dist/Chart.min.js"></script>
   <link rel="stylesheet" href="js/jquery.mobile-1.3.1.min.css" />
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
   <script src="js/jquery.mobile-1.3.1.min.js"></script>
 
   <!-- VUE start -->

@@ -150,14 +150,17 @@
 <?php   if ($cdn): ?>
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+  <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>
   <script src="custom-scripting.js"></script>
   <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
 <?php   else: ?>
   <link rel="stylesheet" href="js/jquery.mobile-1.3.1.min.css" />
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
   <script src="custom-scripting.js"></script>
   <script src="js/jquery.mobile-1.3.1.min.js"></script>
 <?php   endif; ?>
